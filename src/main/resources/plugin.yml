@@ -1,0 +1,12 @@
+name: vivimMiniGame
+version: '${version}'
+main: com.vivim.vivimminigame.VivimMiniGame
+api-version: '1.16'
+
+commands:
+  trash:
+    description: Открыть мусорку для удаления предметов
+    usage: /trash
+  sell:
+    description: Продать предметы из инвентаря
+    usage: /sell
