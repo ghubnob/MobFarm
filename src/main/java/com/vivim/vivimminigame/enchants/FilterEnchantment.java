@@ -18,7 +18,7 @@ public class FilterEnchantment extends Enchantment {
 
     @Override
     public int getMaxLevel() {
-        return 99;
+        return 1;
     }
 
     @Override
