@@ -89,8 +89,6 @@ public class SpawnerUtils {
             default -> "pig";
         };
         cfgMng.setPlayerSpawner(p.getUniqueId(),spawnerIndex,entityTypeStr);
-
-        SboardManager.updateScoreboard(p,spawnerIndex,entityTypeStr);
     }
 
     public EntityType getSpawnerType(int spawnerIndex) {

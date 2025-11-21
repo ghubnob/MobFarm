@@ -1,16 +1,15 @@
 package com.vivim.vivimminigame;
 
+import com.vivim.vivimminigame.commands.SellLootCommand;
 import com.vivim.vivimminigame.data.ConfigManager;
+import com.vivim.vivimminigame.enchants.EnchantmentManager;
 import com.vivim.vivimminigame.events.*;
-import com.vivim.vivimminigame.events.guievents.ClickInvSellLootEvent;
 import com.vivim.vivimminigame.events.guievents.ClickInvSpawnersBuyEvent;
 import com.vivim.vivimminigame.events.guievents.ClickInvSwordUpEvent;
-import com.vivim.vivimminigame.events.guievents.CloseInvSellLootEvent;
 import com.vivim.vivimminigame.events.mobevents.CreeperExplodeEvent;
 import com.vivim.vivimminigame.events.mobevents.EvokerSpawningEvent;
 import com.vivim.vivimminigame.events.mobevents.PiglinTransformEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,16 +24,15 @@ public final class VivimMiniGame extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new EntityDamageEntityEvent(),this);
         Bukkit.getPluginManager().registerEvents(new FoodLevelChangeEvent(),this);
-        Bukkit.getPluginManager().registerEvents(new GetLootFromKillEntityEvent(),this);
+        Bukkit.getPluginManager().registerEvents(new KillEntityEvent(),this);
         Bukkit.getPluginManager().registerEvents(new PlayerDropEvent(),this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractNpc(),this);
         Bukkit.getPluginManager().registerEvents(new PlayerJoin(this),this);
         Bukkit.getPluginManager().registerEvents(new PlayerTakesDamageEvent(),this);
 
-        Bukkit.getPluginManager().registerEvents(new ClickInvSwordUpEvent(),this);
+        Bukkit.getPluginManager().registerEvents(new ClickInvSwordUpEvent(this),this);
         Bukkit.getPluginManager().registerEvents(new ClickInvSpawnersBuyEvent(),this);
-        Bukkit.getPluginManager().registerEvents(new ClickInvSellLootEvent(),this);
-        Bukkit.getPluginManager().registerEvents(new CloseInvSellLootEvent(),this);
+        Bukkit.getPluginManager().registerEvents(new SellLootCommand(),this);
 
         Bukkit.getPluginManager().registerEvents(new CreeperExplodeEvent(),this);
         Bukkit.getPluginManager().registerEvents(new EvokerSpawningEvent(),this);
@@ -42,6 +40,8 @@ public final class VivimMiniGame extends JavaPlugin {
 
         this.getCommand("trash").setExecutor(this);
         this.getCommand("sell").setExecutor(this);
+
+        EnchantmentManager.registerAll(this);
     }
 
     @Override
@@ -60,13 +60,9 @@ public final class VivimMiniGame extends JavaPlugin {
         }
 
         else if (command.getName().equalsIgnoreCase("sell")) {
-            if (!(sender instanceof Player)) {
-                return true;
-            }
-            Player player = (Player) sender;
-            player.openInventory(Bukkit.createInventory(null, 54, "Продажа лута"));
-            return true;
+            return SellLootCommand.callCommand(sender);
         }
+
         return false;
     }
 }

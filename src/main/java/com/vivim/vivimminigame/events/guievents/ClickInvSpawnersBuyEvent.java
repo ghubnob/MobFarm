@@ -35,13 +35,13 @@ public class ClickInvSpawnersBuyEvent implements Listener {
         SpawnerUtils sp = new SpawnerUtils(p);
 
         //spawners upgrade guis
-        if (title.contains("Buy Spawners") && name.contains((sp.getSpawnersAmount()+1)+" "))
+        if (title.contains("Покупка спавнеров") && name.contains((sp.getSpawnersAmount()+1)+" "))
             SpawnersUpGui.openMobSelectionGui(p);
 
-        else if (title.contains("Select mob") && material != Material.BLACK_STAINED_GLASS_PANE)
+        else if (title.contains("Выбери моба") && material != Material.BLACK_STAINED_GLASS_PANE)
             SpawnersUpGui.openSpawnerUpGui(p, material);
 
-        else if (title.contains("Buy spawner") && material == Material.GREEN_STAINED_GLASS_PANE) {
+        else if (title.contains("Купить спавнер") && material == Material.GREEN_STAINED_GLASS_PANE) {
             Material mtEgg = e.getInventory().getItem(13).getType();
             e.getInventory().setItem(0,new ItemStack(Material.CLAY));
             sp.setSpawnerType(sp.getSpawnersAmount(), selectMobFromMaterial(mtEgg));

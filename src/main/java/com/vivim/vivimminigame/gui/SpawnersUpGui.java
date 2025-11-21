@@ -14,14 +14,14 @@ import java.util.Collections;
 
 public class SpawnersUpGui {
     public static void openSpawnersGui(Player p) {
-        Inventory spawnersGui = Bukkit.createInventory(null, 36, ChatColor.DARK_AQUA+"Buy Spawners");
+        Inventory spawnersGui = Bukkit.createInventory(null, 36, "Покупка спавнеров");
         for (int i=0;i<36;i++) {
             if ((i >= 10 && i <= 16) || (i >= 19 && i <= 25)) {
                 ItemStack spawner = new ItemStack(Material.SPAWNER);
                 var spMeta = spawner.getItemMeta();
 
                 int spawnerIndex;
-                if (i >= 10 && i <= 16) {
+                if (i <= 16) {
                     spawnerIndex = i - 10;
                 } else {
                     spawnerIndex = i - 12;
@@ -43,7 +43,7 @@ public class SpawnersUpGui {
     }
 
     public static void openSpawnerUpGui(Player p, Material m) {
-        Inventory spawnersGui = Bukkit.createInventory(null, 27, ChatColor.DARK_AQUA+"Buy spawner");
+        Inventory spawnersGui = Bukkit.createInventory(null, 27, "Купить спавнер");
         for (int i=0;i<27;i++) {
             var agreeWindow = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
             var agreeMeta = agreeWindow.getItemMeta();
@@ -59,7 +59,7 @@ public class SpawnersUpGui {
     }
 
     public static void openMobSelectionGui(Player p) {
-        Inventory mobGui = Bukkit.createInventory(null, 27, ChatColor.DARK_AQUA+"Select mob");
+        Inventory mobGui = Bukkit.createInventory(null, 27, "Выбери моба");
         for (int i=0; i<27; i++) {
             var item = switch (i) {
                 case 9 ->  SpawnersGuiUtils.createMobItem("zombie");

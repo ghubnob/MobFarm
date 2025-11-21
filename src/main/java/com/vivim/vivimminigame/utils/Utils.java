@@ -1,5 +1,6 @@
 package com.vivim.vivimminigame.utils;
 
+import com.vivim.vivimminigame.enchants.EnchantmentManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -13,7 +14,7 @@ import java.util.List;
 public class Utils {
     public static final List<Material> SWORDS = Arrays.asList(Material.WOODEN_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD);
     //enum enchantments (need to add farmer)
-    public enum ENCHANTS {SHARPNESS, SMITE, LOOTING, SWEEP_EDGE, FILTER}
+    public enum ENCHANTS {SHARPNESS, SMITE, LOOTING, SWEEP_EDGE, FILTER, EXPERIENCE}
     public static final List<Material> GOOD_MOB_DROP = Arrays.asList(Material.TOTEM_OF_UNDYING,
             Material.ROTTEN_FLESH, Material.BONE, Material.ARROW, Material.EMERALD, Material.SUGAR,
             Material.CARROT, Material.COAL, Material.POTATO, Material.GOLD_INGOT, Material.IRON_INGOT,
@@ -53,9 +54,8 @@ public class Utils {
             case SMITE -> Enchantment.DAMAGE_UNDEAD;
             case LOOTING -> Enchantment.LOOT_BONUS_MOBS;
             case SWEEP_EDGE -> Enchantment.SWEEPING_EDGE;
-            case FILTER -> Enchantment.FIRE_ASPECT;
-
-            default -> Enchantment.ARROW_INFINITE;
+            case FILTER -> EnchantmentManager.FILTER;
+            case EXPERIENCE -> EnchantmentManager.EXPERIENCE;
         };
     }
 
@@ -93,6 +93,34 @@ public class Utils {
         if(mobType.contains("creeper")) return ChatColor.GREEN+"Крипер";
         if(mobType.contains("witch")) return ChatColor.DARK_PURPLE+"Ведьма";
         if(mobType.contains("blaze")) return ChatColor.YELLOW+"Ифрит";
-        else return "";
+        else return ChatColor.GRAY+"Отсутствует";
+    }
+
+    public static int getMoneyByItem(Material mt) {
+        return switch (mt) {
+            //zombie
+            case ROTTEN_FLESH -> 5;
+            case CARROT -> 25;
+            case POTATO -> 28;
+            case IRON_INGOT -> 55;
+            //skeleton
+            case BONE -> 5;
+            case ARROW -> 5;
+            //blaze
+            case BLAZE_ROD -> 8;
+            //wither skeleton
+            case COAL -> 10;
+            case WITHER_SKELETON_SKULL -> 500;
+            //witch
+            case SUGAR -> 40;
+            //creeper
+            case GUNPOWDER -> 25;
+            //evoker
+            case TOTEM_OF_UNDYING -> 130;
+            case EMERALD -> 30;
+            //piglin brute
+            case GOLD_INGOT -> 45;
+            default -> 0;
+        };
     }
 }

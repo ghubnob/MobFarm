@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ConfigManager {
@@ -50,6 +51,7 @@ public class ConfigManager {
 
     public void setPlayerSpawner(UUID uuid, int i, String type) {
         config.set("players."+uuid+".spawners."+i, type); save();
+        SboardManager.updateScoreboard(Bukkit.getPlayer(uuid),i,type);
     }
     public EntityType getPlayerSpawner(UUID uuid, int i) {
         String entityTypeStr = config.getString("players." + uuid + ".spawners." + i,"pig");
@@ -68,5 +70,18 @@ public class ConfigManager {
     }
     public String getPlayerStrSpawner(UUID uuid, int i) {
         return config.getString("players." + uuid + ".spawners." + i,"pig");
+    }
+
+    public void setPlayerMoney(UUID uuid, int value) {
+        config.set("players."+uuid+".money", value); save();
+        SboardManager.updateScoreboard(Objects.requireNonNull(Bukkit.getPlayer(uuid)),value);
+    }
+    public int getPlayerMoney(UUID uuid) {
+        return config.getInt("players."+uuid+".money", 0);
+    }
+    public void addPlayerMoney(UUID uuid, int value) {
+        int finalMoney = getPlayerMoney(uuid)+value;
+        config.set("players."+uuid+".money", finalMoney); save();
+        SboardManager.updateScoreboard(Objects.requireNonNull(Bukkit.getPlayer(uuid)),finalMoney);
     }
 }

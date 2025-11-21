@@ -1,6 +1,7 @@
 package com.vivim.vivimminigame.events;
 
 import com.vivim.vivimminigame.data.ConfigManager;
+import com.vivim.vivimminigame.data.SboardManager;
 import com.vivim.vivimminigame.npc.UpgradeNpcUtils;
 import com.vivim.vivimminigame.utils.SpawnerUtils;
 import org.bukkit.Bukkit;
@@ -26,7 +27,7 @@ public class PlayerJoin implements Listener {
         Player p = e.getPlayer();
         final ConfigManager cfgMng = ConfigManager.getInstance();
 
-        if (cfgMng==null) {p.kickPlayer("ConfigManager fail!");return;}
+        if (cfgMng==null) {Bukkit.getLogger().info(ChatColor.RED+"ConfigManager null");return;}
 
         if(!cfgMng.isPlayerActive(p.getUniqueId())) {
             SpawnerUtils spwnUtils = new SpawnerUtils(p,true);
@@ -49,6 +50,8 @@ public class PlayerJoin implements Listener {
 
             UpgradeNpcUtils.spawnUpgraderNpc(p.getWorld());
             UpgradeNpcUtils.spawnSpawnerNpc(p.getWorld());
+
+            if (cfgMng.getPlayerMoney(p.getUniqueId())==0) cfgMng.setPlayerMoney(p.getUniqueId(),0);
         }
         else {
             SpawnerUtils spawnUtils = new SpawnerUtils(p);
