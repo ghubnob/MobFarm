@@ -27,11 +27,11 @@ public class SpawnersUpGui {
                     spawnerIndex = i - 12;
                 }
 
-                spMeta.setDisplayName((spawnerIndex + 1) + " Spawner");
+                spMeta.setDisplayName((spawnerIndex + 1) + " Спавнер");
                 String mobType = ConfigManager.getInstance().getPlayerStrSpawner(p.getUniqueId(), spawnerIndex);
-                String mobInSp = mobType.equals("pig") ? "none" : Utils.niceMobMessage(mobType);
+                String mobInSp = mobType.equals("pig") ? "нету" : Utils.createNiceMobName(mobType);
 
-                spMeta.setLore(Collections.singletonList("Mob in spawner: " + mobInSp));
+                spMeta.setLore(Collections.singletonList("Моб в спавнере: " + mobInSp));
                 spawner.setItemMeta(spMeta);
                 spawnersGui.setItem(i, spawner);
             } else {
@@ -48,7 +48,8 @@ public class SpawnersUpGui {
             var agreeWindow = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
             var agreeMeta = agreeWindow.getItemMeta();
             agreeMeta.setDisplayName(ChatColor.GREEN+"Buy spawner");
-            agreeMeta.setLore(Collections.singletonList("You need " +ChatColor.LIGHT_PURPLE+ " levels and " +ChatColor.WHITE+ " money."));
+            int needLevel = Utils.getNeedLevelForSpawner(p);
+            agreeMeta.setLore(Collections.singletonList(ChatColor.WHITE+"Тебе нужно "+ChatColor.LIGHT_PURPLE+ needLevel +ChatColor.WHITE+" уровней"));
             agreeWindow.setItemMeta(agreeMeta);
             if (i<3 || (i>=9 && i<12) || (i>=18 && i<21)) spawnersGui.setItem(i, agreeWindow);
             else if ((i>=15 && i<18) || (i>=6 && i<9) || i>=24) spawnersGui.setItem(i, new ItemStack(Material.RED_STAINED_GLASS_PANE));

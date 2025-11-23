@@ -1,17 +1,15 @@
 package com.vivim.vivimminigame.utils;
 
-import com.vivim.vivimminigame.enchants.EnchantmentManager;
+import com.vivim.vivimminigame.data.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class UpgradeSwordUtils {
@@ -20,35 +18,42 @@ public class UpgradeSwordUtils {
     public static void upgradeSword(Player p) {
         int mainHandSlot = p.getInventory().getHeldItemSlot();
         ItemStack currentItem = p.getInventory().getItemInMainHand();
+        ConfigManager cfgMng = ConfigManager.getInstance();
 
         if (!Utils.SWORDS.contains(currentItem.getType())) return;
 
+        int price;
         ItemStack newSword = currentItem.clone();
-        newSword.setType(switch (newSword.getType()){
-            case WOODEN_SWORD -> Material.STONE_SWORD;
-            case STONE_SWORD -> Material.IRON_SWORD;
-            case IRON_SWORD -> Material.DIAMOND_SWORD;
-            case DIAMOND_SWORD -> Material.NETHERITE_SWORD;
-            default -> newSword.getType();
-        });
+        Material swordType = switch (newSword.getType()){
+            case WOODEN_SWORD -> {price = 2000; yield Material.STONE_SWORD;}
+            case STONE_SWORD -> {price = 10000; yield Material.IRON_SWORD;}
+            case IRON_SWORD -> {price = 30000; yield Material.DIAMOND_SWORD;}
+            case DIAMOND_SWORD -> {price = 85000; yield Material.NETHERITE_SWORD;}
+            default -> {price=Integer.MAX_VALUE; yield newSword.getType();}
+        };
 
+        int pMoney = cfgMng.getPlayerMoney(p.getUniqueId());
+        if (price==Integer.MAX_VALUE) {p.sendMessage("У вас уже максимальный уровень меча!");return;}
+        if (pMoney<price) {p.sendMessage("Недостаточно денег! "+pMoney+"/"+price);return;}
+        cfgMng.addPlayerMoney(p.getUniqueId(), -price);
+        newSword.setType(swordType);
         p.getInventory().setItem(mainHandSlot, newSword);
 
         p.updateInventory();
     }
 
-    public static void enchantSword(Player p, Utils.ENCHANTS enchEnum, int level) {
+    public static boolean enchantSword(Player p, Utils.ENCHANTS enchEnum, int level) {
         Enchantment ench = Utils.getEnchFromEnum(enchEnum);
 
         int slot = p.getInventory().getHeldItemSlot();
         ItemStack sword = p.getInventory().getItem(slot);
 
-        int needExp = getExpEnchantCost(enchEnum,Utils.getPlayerEnchantLevel(p,enchEnum));
+        int needExp = getExpEnchantCost(enchEnum,Utils.getEnchantLevel(p,enchEnum));
         if (p.getLevel() < needExp)
-        { p.sendMessage(ChatColor.RED+"Недостаточно опыта! "+p.getLevel()+"/"+ needExp); return; }
+        { p.sendMessage(ChatColor.RED+"Недостаточно опыта! "+p.getLevel()+"/"+ needExp); return false; }
 
         if (sword == null || !Utils.SWORDS.contains(sword.getType()))
-            { p.sendMessage(ChatColor.RED+"Возьмите меч в руку"); return; }
+            { p.sendMessage(ChatColor.RED+"Возьмите меч в руку"); return false; }
 
         sword.addUnsafeEnchantment(ench,level);
 
@@ -60,6 +65,7 @@ public class UpgradeSwordUtils {
 
         p.getInventory().setItem(slot, sword);
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1f);
+        return true;
     }
 
     public static int getExpEnchantCost(Utils.ENCHANTS e, int level) {
@@ -69,28 +75,31 @@ public class UpgradeSwordUtils {
                 case 5 -> 80; case 6 -> 100;case 7 -> 120; case 8 -> 135; case 9 -> 150;
                 default -> Integer.MAX_VALUE;
             };
+
         else if (e == Utils.ENCHANTS.SMITE)
             return switch (level) {
                 case 0 -> 10; case 1 -> 30; case 2 -> 35; case 3 -> 50; case 4 -> 65;
                 default -> Integer.MAX_VALUE;
             };
+
         else if (e == Utils.ENCHANTS.SWEEP_EDGE)
             return switch (level) {
                 case 0 -> 30; case 1 -> 50; case 2 -> 75; case 3 -> 100; case 4 -> 120;
                 default -> Integer.MAX_VALUE;
             };
+
         else if (e == Utils.ENCHANTS.LOOTING)
             return switch (level) {
-                case 0 -> 50; case 1 -> 80; case 2 -> 100; case 3 -> 150; case 4 -> 250; case 5 -> 600;
+                case 0 -> 30; case 1 -> 50; case 2 -> 80; case 3 -> 120; case 4 -> 200; case 5 -> 500;
                 default -> Integer.MAX_VALUE;
             };
+
         else if (e == Utils.ENCHANTS.EXPERIENCE)
-            return switch (level) {
-                case 0 -> 1; case 9 -> 2;
-                default -> Integer.MAX_VALUE;
-            };
+            return (level+1)*150;
+
         else if (e == Utils.ENCHANTS.FILTER)
             return level==0 ?  1 : Integer.MAX_VALUE;
+
         else return Integer.MAX_VALUE;
     }
 

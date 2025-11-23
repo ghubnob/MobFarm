@@ -6,6 +6,7 @@ import com.vivim.vivimminigame.npc.UpgradeNpcUtils;
 import com.vivim.vivimminigame.utils.SpawnerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -50,12 +51,15 @@ public class PlayerJoin implements Listener {
 
             UpgradeNpcUtils.spawnUpgraderNpc(p.getWorld());
             UpgradeNpcUtils.spawnSpawnerNpc(p.getWorld());
+            UpgradeNpcUtils.spawnExperiencedNpc(p.getWorld());
 
             if (cfgMng.getPlayerMoney(p.getUniqueId())==0) cfgMng.setPlayerMoney(p.getUniqueId(),0);
+            p.setGameMode(GameMode.ADVENTURE);
         }
         else {
             SpawnerUtils spawnUtils = new SpawnerUtils(p);
             p.sendTitle(ChatColor.of("#ac0e61")+"MobFarm", "Рады видеть тебя снова!",10,40,20);
+            p.setFoodLevel(20);
         }
     }
 }

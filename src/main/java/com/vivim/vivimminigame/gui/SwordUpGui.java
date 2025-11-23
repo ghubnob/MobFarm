@@ -1,6 +1,5 @@
 package com.vivim.vivimminigame.gui;
 
-import com.vivim.vivimminigame.utils.UpgradeSwordUtils;
 import com.vivim.vivimminigame.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -68,27 +67,27 @@ public class SwordUpGui {
         Inventory enchantsGui = Bukkit.createInventory(null, 9, ChatColor.DARK_AQUA+"Выбери зачарование");
         for (int i=0; i<9; i++) {
             var item = switch (i) {
-                case 2 -> {int needExp = getExpEnchantCost(Utils.ENCHANTS.SHARPNESS,Utils.getPlayerEnchantLevel(p, Utils.ENCHANTS.SHARPNESS));
+                case 2 -> {int needExp = getExpEnchantCost(Utils.ENCHANTS.SHARPNESS,Utils.getEnchantLevel(p, Utils.ENCHANTS.SHARPNESS));
                     yield Utils.createItemWithMeta(Material.ENCHANTED_BOOK, ChatColor.AQUA+"Острота",
                         Collections.singletonList(needExp>2000 ? ChatColor.RED+"У вас максимальный уровень данного зачарования" :
                         ChatColor.DARK_AQUA+"Стоимость: "+ needExp +" опыта."));
                 }
-                case 3 ->  {int needExp = getExpEnchantCost(Utils.ENCHANTS.SMITE,Utils.getPlayerEnchantLevel(p, Utils.ENCHANTS.SMITE));
+                case 3 ->  {int needExp = getExpEnchantCost(Utils.ENCHANTS.SMITE,Utils.getEnchantLevel(p, Utils.ENCHANTS.SMITE));
                     yield Utils.createItemWithMeta(Material.ENCHANTED_BOOK, ChatColor.AQUA+"Небесная кара",
                             Collections.singletonList(needExp>2000 ? ChatColor.RED+"У вас максимальный уровень данного зачарования" :
                             ChatColor.DARK_AQUA+"Стоимость: "+ needExp +" опыта."));
                 }
-                case 4 -> { int needExp = getExpEnchantCost(Utils.ENCHANTS.SWEEP_EDGE,Utils.getPlayerEnchantLevel(p, Utils.ENCHANTS.SWEEP_EDGE));
+                case 4 -> { int needExp = getExpEnchantCost(Utils.ENCHANTS.SWEEP_EDGE,Utils.getEnchantLevel(p, Utils.ENCHANTS.SWEEP_EDGE));
                     yield Utils.createItemWithMeta(Material.ENCHANTED_BOOK, ChatColor.AQUA+"Разящий клинок",
                             Collections.singletonList(needExp>2000 ? ChatColor.RED+"У вас максимальный уровень данного зачарования" :
                             ChatColor.DARK_AQUA+"Стоимость: "+ needExp +" опыта."));
                 }
-                case 5 -> { int needExp = getExpEnchantCost(Utils.ENCHANTS.LOOTING,Utils.getPlayerEnchantLevel(p, Utils.ENCHANTS.LOOTING));
+                case 5 -> { int needExp = getExpEnchantCost(Utils.ENCHANTS.LOOTING,Utils.getEnchantLevel(p, Utils.ENCHANTS.LOOTING));
                     yield Utils.createItemWithMeta(Material.ENCHANTED_BOOK, ChatColor.AQUA+"Добыча",
                             Collections.singletonList(needExp>2000 ? ChatColor.RED+"У вас максимальный уровень данного зачарования" :
                             ChatColor.DARK_AQUA+"Стоимость: "+ needExp +" опыта."));
                 }
-                case 6 -> { int needExp = getExpEnchantCost(Utils.ENCHANTS.FILTER,Utils.getPlayerEnchantLevel(p, Utils.ENCHANTS.FILTER));
+                case 6 -> { int needExp = getExpEnchantCost(Utils.ENCHANTS.FILTER,Utils.getEnchantLevel(p, Utils.ENCHANTS.FILTER));
                     yield Utils.createItemWithMeta(Material.ENCHANTED_BOOK, ChatColor.WHITE+"Фильтр",
                             Collections.singletonList(needExp>2000 ? ChatColor.RED+"У вас максимальный уровень данного зачарования" :
                             ChatColor.DARK_AQUA+"Стоимость: "+ needExp +" опыта."));

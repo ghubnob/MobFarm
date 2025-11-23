@@ -8,9 +8,10 @@ import org.bukkit.scoreboard.*;
 
 public class SboardManager {
     public static void updateScoreboard(Player p, int spawnerNum, String mobType) {
-        String name = Utils.getNiceMobName(mobType);
+        String name = Utils.createNiceMobName(mobType);
         String scoreText;
-        scoreText = ChatColor.GRAY + "Спавнер " + (spawnerNum+1) + ": " + name;
+        if ((spawnerNum+1)<10) scoreText = ChatColor.GRAY + "Спавнер  " + (spawnerNum+1) + ": " + name;
+        else scoreText = ChatColor.GRAY + "Спавнер " + (spawnerNum+1) + ": " + name;
 
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard sb = p.getScoreboard();
@@ -29,7 +30,10 @@ public class SboardManager {
         for (String entry : sb.getEntries()) {
             if (entry.contains("Спавнер " + (spawnerNum+1) + ":")) {
                 sb.resetScores(entry);
-                break;
+                //break;
+            } else if (entry.contains("Спавнер  " + (spawnerNum+1) + ":")) {
+                sb.resetScores(entry);
+                //break;
             }
         }
 

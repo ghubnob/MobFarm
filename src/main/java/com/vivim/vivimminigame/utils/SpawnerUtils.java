@@ -46,9 +46,7 @@ public class SpawnerUtils {
                 new Location(w, -34, 73, 28),
                 new Location(w, -34, 74, 28),
                 new Location(w, -36, 73, 30),
-                new Location(w, -36, 74, 30),
-                new Location(w, -36, 73, 33),
-                new Location(w, -36, 74, 33)
+                new Location(w, -36, 74, 30)
         );
     }
 

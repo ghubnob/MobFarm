@@ -8,5 +8,8 @@ commands:
     description: Открыть мусорку для удаления предметов
     usage: /trash
   sell:
-    description: Продать предметы из инвентаря
+    description: Продать лут с мобов
     usage: /sell
+  observe:
+    description: Понаблюдать за спавнерами
+    usage: /observe

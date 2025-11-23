@@ -1,23 +1,17 @@
 package com.vivim.vivimminigame.events.guievents;
 
 import com.vivim.vivimminigame.gui.SpawnersUpGui;
-import com.vivim.vivimminigame.gui.SwordUpGui;
 import com.vivim.vivimminigame.utils.SpawnerUtils;
-import com.vivim.vivimminigame.utils.UpgradeSwordUtils;
 import com.vivim.vivimminigame.utils.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static com.vivim.vivimminigame.utils.Utils.SWORDS;
-import static com.vivim.vivimminigame.utils.Utils.getPlayerEnchantLevel;
 
 public class ClickInvSpawnersBuyEvent implements Listener {
     @EventHandler
@@ -34,19 +28,25 @@ public class ClickInvSpawnersBuyEvent implements Listener {
         Material material = e.getCurrentItem().getType();
         SpawnerUtils sp = new SpawnerUtils(p);
 
-        //spawners upgrade guis
+        //гуи покупки спавнеров
         if (title.contains("Покупка спавнеров") && name.contains((sp.getSpawnersAmount()+1)+" "))
             SpawnersUpGui.openMobSelectionGui(p);
 
+        //гуи выбора моба
         else if (title.contains("Выбери моба") && material != Material.BLACK_STAINED_GLASS_PANE)
             SpawnersUpGui.openSpawnerUpGui(p, material);
 
+        //покупа спавнера
         else if (title.contains("Купить спавнер") && material == Material.GREEN_STAINED_GLASS_PANE) {
             Material mtEgg = e.getInventory().getItem(13).getType();
+            int needLevel = Utils.getNeedLevelForSpawner(p);
+            if (p.getLevel()<needLevel) {p.sendMessage(ChatColor.RED+"Не хватает опыта! Нужно "+needLevel+" exp");return;}
+            p.setLevel(p.getLevel()-needLevel);
             e.getInventory().setItem(0,new ItemStack(Material.CLAY));
             sp.setSpawnerType(sp.getSpawnersAmount(), selectMobFromMaterial(mtEgg));
             p.closeInventory();
-            p.sendMessage(sp.getSpawnersAmount()+" spawners");
+            p.sendMessage(ChatColor.GREEN+"Куплен "+sp.getSpawnersAmount()+"-й спавнер: "+Utils.createNiceMobName(mtEgg));
+            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1f);
         }
     }
 
