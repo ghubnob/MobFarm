@@ -90,8 +90,8 @@ public class Utils {
     public static String createNiceMobName(String mobType) {
         mobType = mobType.toLowerCase();
         if(mobType.contains("zombie")) return ChatColor.DARK_GREEN+"Зомби";
-        if(mobType.contains("skeleton")) return ChatColor.GRAY+"Скелет";
         if(mobType.contains("wither_skeleton")) return ChatColor.DARK_GRAY+"Визер скелет";
+        else if(mobType.contains("skeleton")) return ChatColor.GRAY+"Скелет";
         if(mobType.contains("piglin_brute")) return ChatColor.GOLD+"Брутальный пиглин";
         if(mobType.contains("vindicator")) return ChatColor.WHITE+"Поборник";
         if(mobType.contains("evoker")) return ChatColor.LIGHT_PURPLE+"Призыватель";
@@ -118,28 +118,28 @@ public class Utils {
     public static int getMoneyByItem(Material mt) {
         return switch (mt) {
             //zombie
-            case ROTTEN_FLESH -> 5;
+            case ROTTEN_FLESH -> 10;
             case CARROT -> 25;
             case POTATO -> 28;
-            case IRON_INGOT -> 55;
+            case IRON_INGOT -> 300;
             //skeleton
-            case BONE -> 5;
-            case ARROW -> 5;
+            case BONE -> 10;
+            case ARROW -> 10;
             //blaze
-            case BLAZE_ROD -> 8;
+            case BLAZE_ROD -> 20;
             //wither skeleton
             case COAL -> 10;
             case WITHER_SKELETON_SKULL -> 500;
             //witch
-            case SUGAR -> 40;
+            case SUGAR -> 60;
             //creeper
             case GUNPOWDER -> 25;
             //evoker
-            case TOTEM_OF_UNDYING -> 180;
+            case TOTEM_OF_UNDYING -> 130;
             case EMERALD -> 30;
             //piglin brute
             case GOLD_INGOT -> 45;
-            case GOLDEN_AXE -> 45;
+            case GOLDEN_AXE -> 80;
             default -> 0;
         };
     }
@@ -208,26 +208,5 @@ public class Utils {
             iCost += Utils.getMoneyByItem(item.getType())*item.getAmount();
         }
         return iCost;
-    }
-
-    public static void sellInventory(Player p, Inventory inv) {
-        ConfigManager cfgMng = ConfigManager.getInstance();
-        int iCost = 0;
-        for (int i=0;i<inv.getSize();i++) {
-            ItemStack item = inv.getItem(i);
-            if (item==null) continue;
-            if (!Utils.GOOD_MOB_DROP.contains(item.getType())) continue;
-            iCost += Utils.getMoneyByItem(item.getType())*item.getAmount();
-            inv.clear(i);
-        }
-
-        var item1 = inv.getItem(49);
-        if (item1 == null) return;
-        var meta = item1.getItemMeta();
-        meta.setLore(Collections.singletonList(Utils.getColoredText("Вы получите: 0 монет", Utils.COL_ENUM.LIGHT_GREEN)));
-        item1.setItemMeta(meta);
-
-        cfgMng.addPlayerMoney(p.getUniqueId(),iCost);
-        p.sendMessage(ChatColor.GOLD+"Получено: "+ChatColor.WHITE+iCost+ChatColor.GOLD+" монет");
     }
 }

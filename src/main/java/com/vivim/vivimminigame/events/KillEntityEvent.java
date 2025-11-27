@@ -1,9 +1,12 @@
 package com.vivim.vivimminigame.events;
 
 import com.vivim.vivimminigame.enchants.EnchantmentManager;
+import com.vivim.vivimminigame.utils.FarmingUtils;
 import com.vivim.vivimminigame.utils.Utils;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.WitherSkeleton;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -24,18 +27,16 @@ public class KillEntityEvent implements Listener {
             e.setDroppedExp((int) (e.getDroppedExp()*Math.pow(2,farmerLvl)));
         }
 
-        //если у игрока есть фильтр
-        if (playerSword.containsEnchantment(EnchantmentManager.FILTER)) {
-            for (ItemStack i : e.getDrops()) {
-                Material m = i.getType();
-                if (Utils.GOOD_MOB_DROP.contains(m))
-                    killer.getInventory().addItem(i);
-            }
-        }
-        //нет фильтра
-        else for (ItemStack i : e.getDrops()) {
-            killer.getInventory().addItem(i);
-        }
+        FarmingUtils.giveLootKilledMob(killer, e.getDrops());
         e.getDrops().clear();
+
+        //дополнительный шанс на wither skull с добычей
+        if (!(e.getEntity() instanceof WitherSkeleton)) return;
+        if (!playerSword.containsEnchantment(Enchantment.LOOT_BONUS_MOBS)) return;
+        int lootLvl = playerSword.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
+        int chance = switch (lootLvl) {
+            case 1 -> 3; case 2 -> 5; case 3 -> 7; case 4 -> 10; case 5 -> 15; case 6 -> 20; default -> 0;
+        };
+        if (Math.random()*100<=chance) killer.getInventory().addItem(new ItemStack(Material.WITHER_SKELETON_SKULL));
     }
 }

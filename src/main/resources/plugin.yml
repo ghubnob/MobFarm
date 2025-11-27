@@ -13,3 +13,5 @@ commands:
   observe:
     description: Понаблюдать за спавнерами
     usage: /observe
+  autosell:
+    description: Автопродажа лута из инвентаря

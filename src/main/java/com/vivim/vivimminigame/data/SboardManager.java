@@ -10,7 +10,7 @@ public class SboardManager {
     public static void updateScoreboard(Player p, int spawnerNum, String mobType) {
         String name = Utils.createNiceMobName(mobType);
         String scoreText;
-        if ((spawnerNum+1)<10) scoreText = ChatColor.GRAY + "Спавнер  " + (spawnerNum+1) + ": " + name;
+        if ((spawnerNum+1)<10) scoreText = ChatColor.GRAY + "Спавнер " + (spawnerNum+1) + ":  " + name;
         else scoreText = ChatColor.GRAY + "Спавнер " + (spawnerNum+1) + ": " + name;
 
         ScoreboardManager manager = Bukkit.getScoreboardManager();
@@ -23,17 +23,14 @@ public class SboardManager {
 
         Objective obj = sb.getObjective("stats");
         if (obj == null) {
-            obj = sb.registerNewObjective("stats", "dummy", ChatColor.WHITE+""+ChatColor.BOLD+p.getDisplayName());
+            obj = sb.registerNewObjective("stats", "dummy", Utils.getColoredText(p.getDisplayName(), Utils.COL_ENUM.LIGHT_RED));
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         }
 
         for (String entry : sb.getEntries()) {
             if (entry.contains("Спавнер " + (spawnerNum+1) + ":")) {
                 sb.resetScores(entry);
-                //break;
-            } else if (entry.contains("Спавнер  " + (spawnerNum+1) + ":")) {
-                sb.resetScores(entry);
-                //break;
+                break;
             }
         }
 
@@ -53,11 +50,11 @@ public class SboardManager {
 
         Objective obj = sb.getObjective("stats");
         if (obj == null) {
-            obj = sb.registerNewObjective("stats", "dummy", ChatColor.WHITE+""+ChatColor.BOLD+p.getDisplayName());
+            obj = sb.registerNewObjective("stats", "dummy", Utils.getColoredText(p.getDisplayName(), Utils.COL_ENUM.LIGHT_RED));
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         }
 
-        String moneyText = ChatColor.GOLD + "Монеты:      " + money;
+        String moneyText = ChatColor.GOLD + "Монеты:      " + ChatColor.WHITE + money;
 
         for (String entry : sb.getEntries()) {
             if (entry.contains("Монеты:")) {

@@ -65,6 +65,7 @@ public class UpgradeSwordUtils {
 
         p.getInventory().setItem(slot, sword);
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1f);
+        p.closeInventory();
         return true;
     }
 
@@ -90,12 +91,17 @@ public class UpgradeSwordUtils {
 
         else if (e == Utils.ENCHANTS.LOOTING)
             return switch (level) {
-                case 0 -> 30; case 1 -> 50; case 2 -> 80; case 3 -> 120; case 4 -> 200; case 5 -> 500;
+                case 0 -> 30; case 1 -> 50; case 2 -> 80; case 3 -> 120; case 4 -> 230; case 5 -> 500;
                 default -> Integer.MAX_VALUE;
             };
 
         else if (e == Utils.ENCHANTS.EXPERIENCE)
-            return (level+1)*150;
+            return switch(level) {
+                case 0 -> 80;
+                case 1 -> 120;
+                case 2 -> 200;
+                default -> (int) (Math.pow((level*3),2.5)/100)*100;
+            };
 
         else if (e == Utils.ENCHANTS.FILTER)
             return level==0 ?  1 : Integer.MAX_VALUE;
@@ -115,7 +121,12 @@ public class UpgradeSwordUtils {
         else
             name = ChatColor.WHITE + "Фильтр ";
 
-        String newLine = name + level;
+        String strLevel = switch (level) {
+            case 1 -> "I"; case 2 -> "II"; case 3 -> "III"; case 4 -> "IV"; case 5 -> "V";
+            case 6 -> "VI"; case 7 -> "VII"; case 8 -> "VIII"; case 9 -> "IX"; case 10 -> "X";
+            default -> Integer.toString(level);
+        };
+        String newLine = name + strLevel;
 
         lore.removeIf(line -> line.startsWith(name));
 

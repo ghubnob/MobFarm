@@ -2,6 +2,7 @@ package com.vivim.vivimminigame.commands;
 
 import com.vivim.vivimminigame.VivimMiniGame;
 import com.vivim.vivimminigame.data.ConfigManager;
+import com.vivim.vivimminigame.utils.FarmingUtils;
 import com.vivim.vivimminigame.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,7 +30,7 @@ public class SellLootCommand implements Listener {
 
         Inventory inv = e.getInventory();
         if (e.getCurrentItem()!=null && e.getCurrentItem().getType() == Material.GREEN_STAINED_GLASS_PANE)
-            { Utils.sellInventory(p,inv); return; }
+            { FarmingUtils.sellInventory(p,inv); return; }
 
         e.setCancelled(false);
         Bukkit.getScheduler().runTaskLater(VivimMiniGame.getInstance(), () -> {

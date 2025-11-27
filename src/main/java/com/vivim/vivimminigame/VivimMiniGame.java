@@ -1,5 +1,6 @@
 package com.vivim.vivimminigame;
 
+import com.vivim.vivimminigame.commands.AutoSellCommand;
 import com.vivim.vivimminigame.commands.SellLootCommand;
 import com.vivim.vivimminigame.data.ConfigManager;
 import com.vivim.vivimminigame.enchants.EnchantmentManager;
@@ -43,9 +44,12 @@ public final class VivimMiniGame extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EvokerSpawningEvent(),this);
         Bukkit.getPluginManager().registerEvents(new PiglinImmuneEvent(),this);
 
+        Bukkit.getPluginManager().registerEvents(new AutoSellCommand(),this);
+
         this.getCommand("trash").setExecutor(this);
         this.getCommand("sell").setExecutor(this);
         this.getCommand("observe").setExecutor(this);
+        this.getCommand("autosell").setExecutor(this);
 
         EnchantmentManager.registerAll(this);
     }
@@ -68,7 +72,11 @@ public final class VivimMiniGame extends JavaPlugin {
             return SellLootCommand.callCommand(sender);
         }
 
-        if (command.getName().equalsIgnoreCase("observe")) {
+        else if (command.getName().contains("autosell")) {
+            return AutoSellCommand.callCommand(sender,args,this);
+        }
+
+        else if (command.getName().equalsIgnoreCase("observe")) {
             if (!(sender instanceof Player player)) {
                 return true;
             }

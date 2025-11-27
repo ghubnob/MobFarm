@@ -50,8 +50,6 @@ public class ClickInvSwordUpEvent implements Listener {
                     getEnchantLevel(p,Utils.ENCHANTS.LOOTING)+1);
             else if (name.contains("Фильтр")) UpgradeSwordUtils.enchantSword(p, Utils.ENCHANTS.FILTER,
                     getEnchantLevel(p,Utils.ENCHANTS.FILTER)+1);
-            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1f);
-            p.closeInventory();
         }
     }
 }
