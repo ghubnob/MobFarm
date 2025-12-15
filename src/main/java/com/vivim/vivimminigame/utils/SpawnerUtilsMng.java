@@ -1,7 +1,7 @@
 package com.vivim.vivimminigame.utils;
 
 import com.vivim.vivimminigame.data.ConfigManager;
-import com.vivim.vivimminigame.data.SboardManager;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -9,25 +9,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.block.CreatureSpawner;
 import java.util.*;
 
-public class SpawnerUtils {
+public class SpawnerUtilsMng {
     private final Player p;
     private final World w;
     private final List<Location> spawnerLocations;
     private final Map<Integer, EntityType> spawnerConfig;
+    private final Map<Integer, Integer> spawnerLevels;
     ConfigManager cfgMng = ConfigManager.getInstance();
 
-    public SpawnerUtils(Player p) {
+    public SpawnerUtilsMng(Player p) {
         this.p = p;
         this.w = p.getWorld();
         this.spawnerLocations = initializeSpawnerLocations();
         this.spawnerConfig = initializeSpawnerConfig();
+        this.spawnerLevels = initializeSpawnerLevels();
     }
 
-    public SpawnerUtils(Player p, boolean first) {
+    public SpawnerUtilsMng(Player p, boolean first) {
         this.p = p;
         this.w = p.getWorld();
         this.spawnerLocations = initializeSpawnerLocations();
         this.spawnerConfig = initializeSpawnerConfig();
+        this.spawnerLevels = initializeSpawnerLevels();
         setFirstSpawners();
     }
 
@@ -58,6 +61,14 @@ public class SpawnerUtils {
         return config;
     }
 
+    private Map<Integer, Integer> initializeSpawnerLevels() {
+        Map<Integer, Integer> levelsMap = new HashMap<>();
+        for (int i = 0; i < spawnerLocations.size(); i++) {
+            levelsMap.put(i, cfgMng.getPlayerSpawnerUpLvl(p.getUniqueId(),i));
+        }
+        return levelsMap;
+    }
+
     public void setFirstSpawners() {
         setSpawnerType(0,EntityType.ZOMBIE);
         for (int i = 1; i < spawnerLocations.size(); i++) {
@@ -70,6 +81,9 @@ public class SpawnerUtils {
 
         CreatureSpawner spawner = (CreatureSpawner) w.getBlockAt(spawnerLocations.get(spawnerIndex)).getState();
         spawner.setSpawnedType(entityType);
+        spawner.setMinSpawnDelay(5);
+        spawner.setMaxSpawnDelay(5);
+        spawner.setDelay(5);
         spawner.update();
 
         spawnerConfig.put(spawnerIndex, entityType);
@@ -96,5 +110,37 @@ public class SpawnerUtils {
 
     public int getSpawnersAmount() {
         return (int) spawnerConfig.values().stream().filter(a->a!=EntityType.PIG).count();
+    }
+
+    public void addSpawnerLevel(int spawnerIndex) {
+        if (spawnerIndex < 0 || spawnerIndex >= spawnerLocations.size()) return;
+        int spLevel = getSpawnerLevel(spawnerIndex);
+
+        CreatureSpawner spawner = (CreatureSpawner) w.getBlockAt(spawnerLocations.get(spawnerIndex)).getState();
+        int delay = switch (spLevel) {
+            case 1 -> 100;
+            case 2 -> 80;
+            case 3 -> 60;
+            case 4 -> 40;
+            case 5 -> 20;
+            default -> 0;
+        };
+        if (delay==0) { p.sendMessage(ChatColor.YELLOW+"Ваш уровень спавнера максимальный"); return; }
+
+        spawnerLevels.put(spawnerIndex,spLevel+1);
+        if (delay>spawner.getMaxSpawnDelay()) {spawner.setMaxSpawnDelay(delay);}
+        spawner.setMinSpawnDelay(delay);
+        spawner.setMaxSpawnDelay(delay);
+        spawner.setDelay(delay);
+        spawner.update();
+        p.sendMessage(ChatColor.GREEN+"Уровень спавнера улучшен! Новый уровень спавнера: "+(spLevel+1));
+        p.sendMessage(ChatColor.GRAY+"КД на спавн: " +spawner.getMaxSpawnDelay());
+
+        cfgMng.setPlayerSpawnerUpLvl(p.getUniqueId(),spawnerIndex,spLevel+1);
+    }
+
+    public int getSpawnerLevel(int spawnerIndex) {
+        if (spawnerIndex < 0 || spawnerIndex >= spawnerLocations.size()) return 1;
+        return spawnerLevels.getOrDefault(spawnerIndex, 1);
     }
 }

@@ -1,15 +1,11 @@
 package com.vivim.vivimminigame.events;
 
 import com.vivim.vivimminigame.data.ConfigManager;
-import com.vivim.vivimminigame.data.SboardManager;
 import com.vivim.vivimminigame.npc.UpgradeNpcUtils;
-import com.vivim.vivimminigame.utils.SpawnerUtils;
+import com.vivim.vivimminigame.utils.SpawnerUtilsMng;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,7 +27,7 @@ public class PlayerJoin implements Listener {
         if (cfgMng==null) {Bukkit.getLogger().info(ChatColor.RED+"ConfigManager null");return;}
 
         if(!cfgMng.isPlayerActive(p.getUniqueId())) {
-            SpawnerUtils spwnUtils = new SpawnerUtils(p,true);
+            SpawnerUtilsMng spwnUtils = new SpawnerUtilsMng(p,true);
 
             Bukkit.getLogger().info(ChatColor.AQUA+e.getPlayer().getDisplayName()+" joined first time");
             ItemStack startSword = new ItemStack(Material.WOODEN_SWORD);
@@ -48,6 +44,7 @@ public class PlayerJoin implements Listener {
             cfgMng.save();
 
             spwnUtils.setFirstSpawners();
+            spwnUtils.addSpawnerLevel(0);
 
             UpgradeNpcUtils.spawnUpgraderNpc(p.getWorld());
             UpgradeNpcUtils.spawnSpawnerNpc(p.getWorld());
@@ -57,7 +54,7 @@ public class PlayerJoin implements Listener {
             p.setGameMode(GameMode.ADVENTURE);
         }
         else {
-            SpawnerUtils spawnUtils = new SpawnerUtils(p);
+            SpawnerUtilsMng spawnUtils = new SpawnerUtilsMng(p);
             p.sendTitle(ChatColor.of("#ac0e61")+"MobFarm", "Рады видеть тебя снова!",10,40,20);
             p.setFoodLevel(20);
         }

@@ -1,7 +1,7 @@
 package com.vivim.vivimminigame.events.guievents;
 
 import com.vivim.vivimminigame.gui.SpawnersUpGui;
-import com.vivim.vivimminigame.utils.SpawnerUtils;
+import com.vivim.vivimminigame.utils.SpawnerUtilsMng;
 import com.vivim.vivimminigame.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,15 +26,20 @@ public class ClickInvSpawnersBuyEvent implements Listener {
         if (!e.getCurrentItem().hasItemMeta()) e.getCurrentItem().getItemMeta().setDisplayName("");
         String name = e.getCurrentItem().getItemMeta().getDisplayName();
         Material material = e.getCurrentItem().getType();
-        SpawnerUtils sp = new SpawnerUtils(p);
+        SpawnerUtilsMng sp = new SpawnerUtilsMng(p);
 
-        //гуи покупки спавнеров
+        //гуи ПОКУПКИ спавнеров
         if (title.contains("Покупка спавнеров") && name.contains((sp.getSpawnersAmount()+1)+" "))
             SpawnersUpGui.openMobSelectionGui(p);
 
-        //гуи выбора моба
+        //гуи ПРОКАЧКИ спавнера
+        else if (title.contains("Покупка спавнеров") && name.contains("Спавнер") &&
+                name.split(" ").length>1 && Integer.parseInt(name.split(" ")[0]) < sp.getSpawnersAmount()+1)
+            SpawnersUpGui.openSpawnerUpgradeGui(p,e.getCurrentItem());
+
+        //гуи ВЫБОРА моба
         else if (title.contains("Выбери моба") && material != Material.BLACK_STAINED_GLASS_PANE)
-            SpawnersUpGui.openSpawnerUpGui(p, material);
+            SpawnersUpGui.openSpawnerBuyGui(p, material);
 
         //покупа спавнера
         else if (title.contains("Купить спавнер") && material == Material.GREEN_STAINED_GLASS_PANE) {
@@ -46,6 +51,23 @@ public class ClickInvSpawnersBuyEvent implements Listener {
             sp.setSpawnerType(sp.getSpawnersAmount(), selectMobFromMaterial(mtEgg));
             p.closeInventory();
             p.sendMessage(ChatColor.GREEN+"Куплен "+sp.getSpawnersAmount()+"-й спавнер: "+Utils.createNiceMobName(mtEgg));
+            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1f);
+        }
+
+        //улучшение спавнера
+        else if (title.contains("Улучшить спавнер") && material == Material.GREEN_STAINED_GLASS_PANE) {
+            ItemStack spawnerItem = e.getInventory().getItem(13);
+            if (!spawnerItem.hasItemMeta() || !spawnerItem.getItemMeta().hasLore() || spawnerItem.getItemMeta().getLore().size()<2) return;
+            int spLevel = Integer.parseInt(spawnerItem.getItemMeta().getLore().get(1).split(" ")[1]);
+            int spIndex = Integer.parseInt(spawnerItem.getItemMeta().getDisplayName().split(" ")[0])-1;
+            int needLevelExp = spLevel*spLevel*30+50;
+
+            if (p.getLevel()<needLevelExp) {p.sendMessage(ChatColor.RED+"Не хватает опыта! "+
+                    ChatColor.GRAY+"Нужно "+needLevelExp+" exp");return;}
+
+            p.setLevel(p.getLevel()-needLevelExp);
+            sp.addSpawnerLevel(spIndex);
+            p.closeInventory();
             p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1f);
         }
     }

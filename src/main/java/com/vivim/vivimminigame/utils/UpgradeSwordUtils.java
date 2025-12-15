@@ -118,8 +118,9 @@ public class UpgradeSwordUtils {
         String name;
         if (ench == Utils.ENCHANTS.EXPERIENCE)
             name = ChatColor.DARK_PURPLE + "Опытность ";
-        else
+        else if (ench == Utils.ENCHANTS.FILTER)
             name = ChatColor.WHITE + "Фильтр ";
+        else return meta;
 
         String strLevel = switch (level) {
             case 1 -> "I"; case 2 -> "II"; case 3 -> "III"; case 4 -> "IV"; case 5 -> "V";

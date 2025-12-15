@@ -1,6 +1,5 @@
 package com.vivim.vivimminigame.utils;
 
-import com.vivim.vivimminigame.data.ConfigManager;
 import com.vivim.vivimminigame.enchants.EnchantmentManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -145,7 +144,7 @@ public class Utils {
     }
 
     public static int getNeedLevelForSpawner(Player p) {
-        SpawnerUtils sp = new SpawnerUtils(p);
+        SpawnerUtilsMng sp = new SpawnerUtilsMng(p);
         return switch (sp.getSpawnersAmount()) {
             case 1 -> 10;  case 2 -> 20;  case 3 -> 30;  case 4 -> 45;  case 5 -> 70;
 

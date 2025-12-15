@@ -1,6 +1,7 @@
 package com.vivim.vivimminigame.gui;
 
 import com.vivim.vivimminigame.data.ConfigManager;
+import com.vivim.vivimminigame.utils.SpawnerUtilsMng;
 import com.vivim.vivimminigame.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,10 +11,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import com.vivim.vivimminigame.utils.SpawnersGuiUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 public class SpawnersUpGui {
     public static void openSpawnersGui(Player p) {
+        SpawnerUtilsMng spMng = new SpawnerUtilsMng(p);
         Inventory spawnersGui = Bukkit.createInventory(null, 36, "Покупка спавнеров");
         for (int i=0;i<36;i++) {
             if ((i >= 10 && i <= 16) || (i >= 19 && i <= 25)) {
@@ -29,9 +32,10 @@ public class SpawnersUpGui {
 
                 spMeta.setDisplayName((spawnerIndex + 1) + " Спавнер");
                 String mobType = ConfigManager.getInstance().getPlayerStrSpawner(p.getUniqueId(), spawnerIndex);
-                String mobInSp = mobType.equals("pig") ? "нету" : Utils.createNiceMobName(mobType);
+                String mobInSp = Utils.createNiceMobName(mobType);
+                int spLevel = spMng.getSpawnerLevel(spawnerIndex);
 
-                spMeta.setLore(Collections.singletonList("Моб в спавнере: " + mobInSp));
+                spMeta.setLore(Arrays.asList(ChatColor.WHITE+"Моб в спавнере: "+mobInSp, ChatColor.WHITE+"Уровень: "+spLevel));
                 spawner.setItemMeta(spMeta);
                 spawnersGui.setItem(i, spawner);
             } else {
@@ -42,7 +46,7 @@ public class SpawnersUpGui {
         p.openInventory(spawnersGui);
     }
 
-    public static void openSpawnerUpGui(Player p, Material m) {
+    public static void openSpawnerBuyGui(Player p, Material m) {
         Inventory spawnersGui = Bukkit.createInventory(null, 27, "Купить спавнер");
         for (int i=0;i<27;i++) {
             var agreeWindow = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
@@ -78,5 +82,21 @@ public class SpawnersUpGui {
             mobGui.setItem(i, item);
             p.openInventory(mobGui);
         }
+    }
+
+    public static void openSpawnerUpgradeGui(Player p, ItemStack spawner) {
+        Inventory spawnersGui = Bukkit.createInventory(null, 27, "Улучшить спавнер");
+        for (int i=0;i<27;i++) {
+            int spLevel = Integer.parseInt(spawner.getItemMeta().getLore().get(1).split(" ")[1]);
+            int needLevel = spLevel*spLevel*30+50;
+            var agreeWindow = Utils.createItemWithMeta(Material.GREEN_STAINED_GLASS_PANE,ChatColor.GREEN+"Улучшить спавнер",
+                    Arrays.asList("Улучшить до уровня "+(spLevel+1),ChatColor.WHITE+"Нужно "+needLevel+" уровней"));
+            //agreeMeta.setLore(Collections.singletonList(ChatColor.WHITE+"Тебе нужно "+ChatColor.LIGHT_PURPLE+needLevel+ChatColor.WHITE+" уровней"));
+            if (i<3 || (i>=9 && i<12) || (i>=18 && i<21)) spawnersGui.setItem(i, agreeWindow);
+            else if ((i>=15 && i<18) || (i>=6 && i<9) || i>=24) spawnersGui.setItem(i, new ItemStack(Material.RED_STAINED_GLASS_PANE));
+            else spawnersGui.setItem(i, new ItemStack(Material.GRAY_STAINED_GLASS_PANE));
+            spawnersGui.setItem(13,spawner);
+        }
+        p.openInventory(spawnersGui);
     }
 }

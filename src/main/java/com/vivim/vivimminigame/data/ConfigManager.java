@@ -50,11 +50,11 @@ public class ConfigManager {
     public boolean isPlayerActive(UUID uuid) { return config.contains("players."+uuid); }
 
     public void setPlayerSpawner(UUID uuid, int i, String type) {
-        config.set("players."+uuid+".spawners."+i, type); save();
+        config.set("players."+uuid+".spawners."+i+".mob", type); save();
         SboardManager.updateScoreboard(Bukkit.getPlayer(uuid),i,type);
     }
     public EntityType getPlayerSpawner(UUID uuid, int i) {
-        String entityTypeStr = config.getString("players." + uuid + ".spawners." + i,"pig");
+        String entityTypeStr = config.getString("players." + uuid + ".spawners." + i + ".mob","pig");
         return switch (entityTypeStr) {
             case "zombie" -> EntityType.ZOMBIE;
             case "skeleton" -> EntityType.SKELETON;
@@ -69,7 +69,14 @@ public class ConfigManager {
         };
     }
     public String getPlayerStrSpawner(UUID uuid, int i) {
-        return config.getString("players." + uuid + ".spawners." + i,"pig");
+        return config.getString("players." + uuid + ".spawners." + i + ".mob","pig");
+    }
+
+    public void setPlayerSpawnerUpLvl(UUID uuid, int i, int upLevel) {
+        config.set("players."+uuid+".spawners."+i+".level", upLevel); save();
+    }
+    public int getPlayerSpawnerUpLvl(UUID uuid, int i) {
+        return config.getInt("players."+uuid+".spawners."+i+".level", 1);
     }
 
     public void setPlayerMoney(UUID uuid, int value) {
