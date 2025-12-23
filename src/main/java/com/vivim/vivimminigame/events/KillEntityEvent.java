@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class KillEntityEvent implements Listener {
     @EventHandler
-    public static void onPlayerKillEntity(EntityDeathEvent e) {
+    public void onPlayerKillEntity(EntityDeathEvent e) {
         Player killer = e.getEntity().getKiller();
         if (killer == null) {e.getDrops().clear(); return;}
 

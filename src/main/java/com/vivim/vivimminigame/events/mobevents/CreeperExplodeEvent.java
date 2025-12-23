@@ -6,7 +6,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class CreeperExplodeEvent implements Listener {
     @EventHandler
-    public static void onCreeperExplode(EntityExplodeEvent e){
+    public void onCreeperExplode(EntityExplodeEvent e){
         e.setYield(0);
         e.blockList().clear();
         e.setCancelled(true);

@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class PlayerInteractNpc implements Listener {
     @EventHandler
-    public static void playerInteract(PlayerInteractEntityEvent e) {
+    public void playerInteract(PlayerInteractEntityEvent e) {
         Entity npc = e.getRightClicked();
         if (!(npc instanceof Villager)) return;
         Player p = e.getPlayer();

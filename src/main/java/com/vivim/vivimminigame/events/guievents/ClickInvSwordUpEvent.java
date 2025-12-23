@@ -17,7 +17,7 @@ public class ClickInvSwordUpEvent implements Listener {
     private static JavaPlugin plugin;
     public ClickInvSwordUpEvent(JavaPlugin pl) {plugin = pl;}
     @EventHandler
-    public static void onPlayerClickEvent(InventoryClickEvent e) {
+    public void onPlayerClickEvent(InventoryClickEvent e) {
         String title = e.getView().getTitle();
         Player p = (Player) e.getWhoClicked();
         //return if default inventory

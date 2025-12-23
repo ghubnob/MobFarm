@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ExperiencedGuiClickInv implements Listener {
     @EventHandler
-    public static void onPlayerClickEvent(InventoryClickEvent e) {
+    public void onPlayerClickEvent(InventoryClickEvent e) {
         String title = e.getView().getTitle();
         Player p = (Player) e.getWhoClicked();
         ConfigManager cfgMng = ConfigManager.getInstance();

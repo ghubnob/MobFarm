@@ -9,13 +9,13 @@ import org.bukkit.event.entity.EntityTargetEvent;
 
 public class PiglinImmuneEvent implements Listener {
     @EventHandler
-    public static void onPiglinSpawn(EntitySpawnEvent e) {
+    public void onPiglinSpawn(EntitySpawnEvent e) {
         if (e.getEntity() instanceof PiglinBrute) {
             ((PiglinBrute) e.getEntity()).setImmuneToZombification(true);
         }
     }
     @EventHandler
-    public static void onEntityTargetEntity(EntityTargetEvent e) {
+    public void onEntityTargetEntity(EntityTargetEvent e) {
         if (e.getEntity().getType() == EntityType.EXPERIENCE_ORB) return;
         e.setCancelled(true);
     }

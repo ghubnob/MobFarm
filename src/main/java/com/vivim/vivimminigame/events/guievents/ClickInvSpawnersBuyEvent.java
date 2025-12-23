@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ClickInvSpawnersBuyEvent implements Listener {
     @EventHandler
-    public static void onPlayerClickEvent(InventoryClickEvent e) {
+    public void onPlayerClickEvent(InventoryClickEvent e) {
         String title = e.getView().getTitle();
         Player p = (Player) e.getWhoClicked();
         //return; if default inventory
@@ -72,7 +72,7 @@ public class ClickInvSpawnersBuyEvent implements Listener {
         }
     }
 
-    private static EntityType selectMobFromMaterial(Material m) {
+    private EntityType selectMobFromMaterial(Material m) {
         return switch (m) {
             case ZOMBIE_SPAWN_EGG -> EntityType.ZOMBIE;
             case BLAZE_SPAWN_EGG -> EntityType.BLAZE;

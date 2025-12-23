@@ -7,7 +7,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class EntityDamageEntityEvent implements Listener {
     @EventHandler
-    public static void onEntityDamageEntity(EntityDamageByEntityEvent e) {
+    public void onEntityDamageEntity(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof Player)) e.setCancelled(true);
     }
 }
