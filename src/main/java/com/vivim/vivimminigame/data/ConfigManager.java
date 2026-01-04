@@ -91,4 +91,8 @@ public class ConfigManager {
         config.set("players."+uuid+".money", finalMoney); save();
         SboardManager.updateScoreboard(Objects.requireNonNull(Bukkit.getPlayer(uuid)),finalMoney);
     }
+
+    public static void unregisterInstance() {
+        instance = null;
+    }
 }

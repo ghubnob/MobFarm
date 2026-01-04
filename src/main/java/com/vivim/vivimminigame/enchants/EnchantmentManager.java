@@ -37,4 +37,9 @@ public class EnchantmentManager {
             Bukkit.getLogger().info(ChatColor.YELLOW+"Enchantment unlock exception: "+e);
         }
     }
+
+    public static void unregisterAll() {
+        EXPERIENCE = null;
+        FILTER = null;
+    }
 }

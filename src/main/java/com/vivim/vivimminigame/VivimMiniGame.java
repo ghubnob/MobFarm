@@ -56,6 +56,9 @@ public final class VivimMiniGame extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        instance = null;
+        EnchantmentManager.unregisterAll();
+        ConfigManager.unregisterInstance();
     }
 
     @Override
